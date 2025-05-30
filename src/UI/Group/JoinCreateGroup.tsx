@@ -1,6 +1,5 @@
-import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Button, Container, Typography } from "@mui/material";
+import { Button, Container, Typography } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import { theme, GlobalThemeProvider } from "../theme";
 
@@ -35,7 +34,7 @@ const LoginSuccessPage = () => {
             variant="outlined"
             fullWidth
             sx={{ mb: 2, borderColor: "#0A2647", color: "#0A2647", "&:hover": { backgroundColor: "#D6E4FF" } }}
-            onClick={() => navigate("/JoinCreateGroup/InsertCode")}
+            onClick={() => navigate("/join-create-group/insert-code")}
             >
             Join Group
             </Button>
@@ -46,7 +45,7 @@ const LoginSuccessPage = () => {
             variant="outlined"
             fullWidth
             sx={{ borderColor: "#0A2647", color: "#0A2647", "&:hover": { backgroundColor: "#D6E4FF" } }}
-            onClick={() => navigate("/JoinCreateGroup/CreateGroup")}
+            onClick={() => navigate("/join-create-group/create-group")}
             >
             Create New
             </Button>

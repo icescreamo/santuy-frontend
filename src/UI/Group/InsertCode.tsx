@@ -15,11 +15,13 @@ import {
   List,
   ListItem,
   ListItemText,
+  CircularProgress,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { ThemeProvider } from "@mui/material/styles";
 import { theme, GlobalThemeProvider } from "../theme";
-import logo from "../assets/logo.png";
+import useGroup from "../../hooks/account/useGroup";
+import { HttpStatusCode } from "axios";
 
 const InsertGroupCodePage = () => {
   const [groupCode, setGroupCode] = useState("");
@@ -29,20 +31,26 @@ const InsertGroupCodePage = () => {
   const [isValidCode, setIsValidCode] = useState(false);
   const navigate = useNavigate();
 
+  const { mutateAsync: setGroup, status: groupJoinStatus } = useGroup();
+
   useEffect(() => {
     const savedHistory = JSON.parse(localStorage.getItem("groupHistory") || "[]");
     setGroupHistory(savedHistory);
   }, []);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (groupCode.trim() === "") {
       setError(true);
       return;
     }
     setError(false);
 
-    const valid = validateGroupCode(groupCode);
-    setIsValidCode(valid);
+    // Assumption: group_id === group code
+    const valid =
+      await setGroup({group_id: groupCode})
+      .then(response => response.status === HttpStatusCode.Ok ? true : false)
+
+    setIsValidCode(valid)
 
     if (valid) {
       setGroupHistory((prevHistory) => {
@@ -61,7 +69,7 @@ const InsertGroupCodePage = () => {
   const handleClosePopup = () => {
     setOpenPopup(false);
     if (isValidCode) {
-      navigate("/JoinCreateGroup");
+      navigate('/itinerary');
     }
   };
 
@@ -75,7 +83,7 @@ const InsertGroupCodePage = () => {
   };
 
   const validateGroupCode = (code: string) => {
-    const validCodes = ["TRVL123", "HOLIDAY456", "SUMMER789"]; 
+    const validCodes = ["TRVL123", "HOLIDAY456", "SUMMER789"];
     return validCodes.includes(code);
   };
 
@@ -136,6 +144,7 @@ const InsertGroupCodePage = () => {
           >
             Submit
           </Button>
+          {groupJoinStatus === "pending" ? <CircularProgress /> : <></>}
 
           {/* Group History List */}
           {groupHistory.length > 0 && (
